@@ -1,11 +1,49 @@
 const path = require("path");
 const webpack = require("webpack");
+const glob = require("glob");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const setMPA = () => {
+  const entry = {};
+  const htmlWebpackPlugins = [];
+  const entryFiles = glob.sync(path.join(__dirname, "./src/*/index.js"));
+  console.log("entryFiles", entryFiles);
+  entryFiles.map((entryFile) => {
+    const match = entryFile.match(/src\/(.*)\/index\.js/);
+    const pageName = match && match[1];
+    entry[pageName] = entryFile;
+    // console.log("pageName", pageName);
+    htmlWebpackPlugins.push(
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, `src/${pageName}/index.html`),
+        filename: `${pageName}.html`,
+        chunks: [pageName],
+        inject: true,
+        minify: {
+          html5: true,
+          collapseWhitespace: true,
+          preserveLineBreaks: false,
+          minifyCSS: true,
+          minifyJS: true,
+          removeComments: false,
+        },
+      })
+    );
+  });
+
+  return {
+    entry,
+    htmlWebpackPlugins,
+  };
+};
+
+const { entry, htmlWebpackPlugins } = setMPA();
 
 module.exports = {
-  entry: {
-    index: "./src/index.js",
-    search: "./src/search.js",
-  },
+  entry: entry,
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
@@ -30,8 +68,20 @@ module.exports = {
       { test: /.(woff|woff2|eot|ttf)$/, use: "file-loader" },
     ],
   },
+  optimization: {
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()].concat(
+      htmlWebpackPlugins
+    )
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "[name]_[contenthash:6].css",
+    }),
+    // new CleanWebpackPlugin()
+  ],
   devServer: {
-    static: './dist',
+    static: "./dist",
     hot: true
-  }
+  },
+  devtool: "source-map"
 };

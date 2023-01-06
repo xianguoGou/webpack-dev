@@ -1,0 +1,1 @@
+{"version":3,"file":"search_00fe5a.css","mappings":"AAAA;EACE;EACA;EAAA;EAAA;EAAA;EAAA;AACF","sources":["webpack://webpack-dev/./src/search/search.less"],"sourcesContent":[".text {\n  color: blue;\n  display: flex;\n}"],"names":[],"sourceRoot":""}
