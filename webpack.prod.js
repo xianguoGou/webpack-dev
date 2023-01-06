@@ -20,7 +20,7 @@ const setMPA = () => {
       new HtmlWebpackPlugin({
         template: path.join(__dirname, `src/${pageName}/index.html`),
         filename: `${pageName}.html`,
-        chunks: [pageName],
+        chunks: ['vendors', pageName],
         inject: true,
         minify: {
           html5: true,
@@ -112,6 +112,17 @@ module.exports = {
     minimizer: [new TerserPlugin(), new CssMinimizerPlugin()].concat(
       htmlWebpackPlugins
     ),
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        commons: {
+          test: /(react|react-dom)/,
+          name: "vendors",
+          chunks: "all"
+        }
+      }
+    }
+      
   },
   plugins: [
     new MiniCssExtractPlugin({
