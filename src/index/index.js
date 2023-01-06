@@ -1,2 +1,2 @@
 import helloWorld from './helloWorld'
-document.write(helloWorld())
+document.body.innerHTML = helloWorld()
