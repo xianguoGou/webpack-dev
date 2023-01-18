@@ -38,3 +38,11 @@ rimraf ./dist && webpack
 - `cheap`, 不包含列信息
 - `inline`, 将.map作为DataURL嵌入，不单独生成.map文件
 - `module`, 包含loader的source-map
+
+### Tree Shaking (摇树优化)
+
+概念： 1个模块可能有多个方法，只要其中的某个方法使用到了，则整个文件都会被打到bundle里面去，tree shaking 就是只把使用到的方法打入bundle，没用到的方法会在uglify阶段被擦除掉
+
+使用： webpack默认支持， `production mode` 情况下默认开启
+
+要求： 必须是Es6的语法，CJS的方式不支持

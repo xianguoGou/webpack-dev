@@ -5,6 +5,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 const setMPA = () => {
   const entry = {};
@@ -128,6 +129,8 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "[name]_[contenthash:6].css",
     }),
-    // new CleanWebpackPlugin()
+    // new CleanWebpackPlugin(),
+    new FriendlyErrorsWebpackPlugin(),
   ],
+  stats: 'errors-only',
 };
